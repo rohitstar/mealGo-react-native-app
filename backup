@@ -1,0 +1,906 @@
+import React, {useState, useEffect} from 'react';
+import {View, Text, FlatList, Image} from 'react-native';
+import {RestaurantScreen} from './src/features/restaurants/screens/restaurant.screen';
+import {ThemeProvider} from 'styled-components/native';
+import {theme} from './src/infrastructure/theme';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import restaurantsRequest from './src/services/restaurants/restaurant-service';
+// import {HomeScreen} from './src/otherScreen/home-page';
+
+const TAB_ICON = {
+  Restaurants: 'restaurant',
+  Map: 'map',
+  Settings: 'settings',
+};
+
+const createScreenOptions = ({route}) => {
+  const iconName = TAB_ICON[route.name];
+  return {
+    tabBarIcon: ({size, color}) => (
+      <Ionicons name={iconName} size={size} color={color} />
+    ),
+  };
+};
+
+function Map() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Map!</Text>
+    </View>
+  );
+}
+
+function SettingsScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+// function Github() {
+//   return (
+//     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+//       <FlatList
+//         data={getData}
+//         renderItem={() => }
+//         keyExtractor={item => item.id}
+//       />
+//     </View>
+//   );
+// }
+
+const Tab = createBottomTabNavigator();
+
+const App = () => {
+  const [getData, setGetData] = useState([]);
+  const [getProfileData, setGetProfileData] = useState();
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    const url = 'https://api.github.com/users/rohitstar/repos';
+
+    const gitFetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        // console.log(data[0].id);
+        setGetData(data);
+      } catch (error) {
+        setLoading(false);
+        setError('Dont fetch data');
+      }
+    };
+
+    gitFetchData();
+  }, []);
+
+  useEffect(() => {
+    const url = 'https://api.github.com/users/rohitstar';
+
+    const gitProfileFetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const profileData = await response.json();
+        // console.log(profileData.avatar_url);
+        setGetProfileData(profileData);
+      } catch (error) {
+        // setLoading(false);
+        console.log('Dont fetch data');
+      }
+    };
+
+    gitProfileFetchData();
+  }, []);
+
+  const renderItem = ({item}) => (
+    <View
+      style={{
+        borderBottomWidth: 2,
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+      }}>
+      <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.name}</Text>
+      <Text style={{fontSize: 10}}>{item.language}</Text>
+    </View>
+  );
+
+  function Github() {
+    return (
+      <View>
+        <View
+          style={{
+            alignItems: 'center',
+            marginVertical: 10,
+            // shadowColor: 'black',
+            // shadowOffset: {
+            //   width: 1,
+            //   height: 15,
+            // },
+            // shadowRadius: 14,
+          }}>
+          <Image
+            source={{
+              uri: getProfileData.avatar_url,
+            }}
+            style={{height: 100, width: 100, borderRadius: 50}}
+          />
+          <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+            {getProfileData.name}
+          </Text>
+          <Text style={{fontSize: 18}}>{getProfileData.location}</Text>
+        </View>
+        {loading ? (
+          <FlatList
+            data={getData}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />
+        ) : (
+          <Text style={{fontSize: 16, fontWeight: 'bold'}}>{error}</Text>
+        )}
+      </View>
+    );
+  }
+
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={createScreenOptions}
+            tabBarOptions={{
+              activeTintColor: 'tomato',
+              inactiveTintColor: 'gray',
+            }}>
+            <Tab.Screen name="Restaurants" component={RestaurantScreen} />
+            <Tab.Screen name="Map" component={Map} />
+            <Tab.Screen name="Settings" component={SettingsScreen} />
+            <Tab.Screen name="Github" component={Github} />
+          </Tab.Navigator>
+        </NavigationContainer>
+        {/* <RestaurantScreen /> */}
+      </ThemeProvider>
+    </>
+  );
+};
+
+export default App;
+
+
+
+
+
+///////////////////////////// whiteHat Jr Theme /////////////////////////////////
+
+
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import {RestaurantScreen} from './src/features/restaurants/screens/restaurant.screen';
+import {ThemeProvider} from 'styled-components/native';
+import {theme} from './src/infrastructure/theme';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+// import restaurantsRequest from './src/services/restaurants/restaurant-service';
+import {SvgXml} from 'react-native-svg';
+// import {HomeScreen} from './src/otherScreen/home-page';
+// import open from './assets/open';
+import alpha from './assets/alpha';
+// import WebView from 'react-native-webview';
+import YoutubePlayer from 'react-native-youtube-iframe';
+
+const TAB_ICON = {
+  Restaurants: 'restaurant',
+  Map: 'map',
+  Settings: 'settings',
+};
+
+const createScreenOptions = ({route}) => {
+  const iconName = TAB_ICON[route.name];
+  return {
+    tabBarIcon: ({size, color}) => (
+      <Ionicons name={iconName} size={size} color={color} />
+    ),
+  };
+};
+
+function Map() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Map!</Text>
+    </View>
+  );
+}
+
+function SettingsScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+function HomeScreen() {
+  return (
+    <ScrollView>
+      <View style={{flex: 1}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#FCE9DC',
+            borderColor: '#EFCCB3',
+            borderRadius: 8,
+            borderWidth: 1,
+            padding: 5,
+            margin: 15,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              // justifyContent: 'center',
+              backgroundColor: '#fff',
+              // borderColor: '#FF8D1A',
+              borderRadius: 8,
+              padding: 10,
+              justifyContent: 'space-between',
+              marginRight: 10,
+            }}>
+            <SvgXml
+              style={{marginRight: 5}}
+              xml={alpha}
+              width={20}
+              height={20}
+            />
+
+            <Text style={{fontSize: 14}}>Learn to Code</Text>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <SvgXml
+              style={{marginRight: 5}}
+              xml={alpha}
+              width={20}
+              height={20}
+            />
+
+            <Text style={{fontSize: 14}}>Create with Math</Text>
+          </View>
+        </View>
+
+        <View style={{flex: 1, backgroundColor: '#fff', borderRadius: 10}}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: '#FCE9DC',
+              // height: 200,
+              // width: 280,
+              margin: 20,
+              borderRadius: 10,
+              borderLeftWidth: 10,
+              borderColor: '#FC5A5A',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 15,
+            }}>
+            {/* <Text style={{textAlign: 'center'}}> */}
+            <Text
+              style={{
+                margin: 5,
+                fontSize: 20,
+                fontWeight: '700',
+                textAlign: 'center',
+                color: '#FC5A5A',
+              }}>
+              Set up your Laptop / PC
+            </Text>
+            <Text
+              style={{
+                margin: 5,
+                fontWeight: '700',
+                textAlign: 'center',
+                color: '#FC5A5A',
+                lineHeight: 20,
+              }}>
+              92% students create a mobile app in the trial class if they set up
+              their laptop/PC before class! Please do it now in 180 seconds or
+              les..
+            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={require('./assets/monitor.png')}
+                width={50}
+                height={50}
+              />
+
+              <Text style={{margin: 5, lineHeight: 20}}>
+                Login to byjusfutureschool.com from your laptop or PC, and set
+                up your audio & video now!
+              </Text>
+            </View>
+            <Text style={{margin: 5, textAlign: 'center'}}>
+              Need help? 022 68337300
+            </Text>
+            {/* </Text> */}
+          </View>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: '#FF8D1A',
+              padding: 15,
+              margin: 20,
+              borderRadius: 5,
+            }}>
+            <Text
+              style={{
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: 16,
+                textAlign: 'center',
+                // fontFamily: 'Futura PT',
+              }}>
+              Update your Information
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              margin: 20,
+              borderRadius: 16,
+              backgroundColor: '#fff',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.22,
+              shadowRadius: 2.22,
+
+              elevation: 3,
+            }}>
+            <View
+              style={{
+                backgroundColor: '#6C5DD3',
+                flexDirection: 'row',
+                padding: 16,
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  height: 70,
+                  width: 70,
+                  backgroundColor: '#fff',
+                  textAlign: 'center',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 12,
+                }}>
+                <Text>Web</Text>
+                <Text style={{fontSize: 32, fontWeight: 'bold'}}>21</Text>
+              </View>
+              <View style={{marginLeft: 20, lineHeight: 20}}>
+                <Text style={{fontSize: 16, fontWeight: '700', color: '#fff'}}>
+                  Upcoming Train Class
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '400',
+                    color: '#fff',
+                    fontFamily: 'Cochin',
+                  }}>
+                  5PM - 6PM
+                </Text>
+              </View>
+            </View>
+            <View style={{padding: 16}}>
+              <Text style={{fontSize: 16, fontWeight: '700', marginBottom: 8}}>
+                Coding 101
+              </Text>
+              <Text style={{fontSize: 14, fontWeight: '400', lineHeight: 20}}>
+                Manage color properties of various GUI elements and enhance
+                Usability and experience with code.
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: '#00B5CE',
+                padding: 16,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  color: '#fff',
+                  marginRight: 10,
+                }}>
+                Your class starts in
+              </Text>
+              <View style={styles.class_start_timer}>
+                <Text style={styles.class_start_timer_text}>01</Text>
+              </View>
+              <Text style={styles.class_start_timer_text_col}>:</Text>
+              <View style={styles.class_start_timer}>
+                <Text style={styles.class_start_timer_text}>30</Text>
+              </View>
+              <Text style={styles.class_start_timer_text_col}>:</Text>
+              <View style={styles.class_start_timer}>
+                <Text style={styles.class_start_timer_text}>00</Text>
+              </View>
+            </View>
+            <View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#ccc',
+                  padding: 10,
+                  margin: 16,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: '#888',
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                  }}>
+                  Join Your Class
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          {/* -------------------------------------------  */}
+          <View
+            style={{
+              borderBottomWidth: 1,
+              borderColor: '#aaa',
+              marginHorizontal: 16,
+            }}></View>
+
+          <View style={{flex: 1, margin: 16}}>
+            <Text
+              style={{fontWeight: 'bold', fontSize: 18, marginVertical: 10}}>
+              Refer Your Friends Now
+            </Text>
+
+            {/* <View style={{height: 150, width: 300, overflow: 'hidden'}}> */}
+            <ImageBackground
+              source={require('./assets/win.png')}
+              style={{width: '100%', height: 140, resizeMode: 'contain'}}>
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  // top: 60,
+                  // left: 60,
+                  right: 10,
+                  bottom: 33,
+                  // justifyContent: 'center',
+                  // alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    color: '#fff',
+                    backgroundColor: '#000',
+                    paddingHorizontal: 40,
+                    paddingVertical: 10,
+                    borderRadius: 5,
+                  }}>
+                  Win Now
+                </Text>
+              </TouchableOpacity>
+            </ImageBackground>
+            {/* </View> */}
+          </View>
+          {/* -------------------------------------------- */}
+          <View
+            style={{
+              borderBottomWidth: 1,
+              borderColor: '#aaa',
+              marginHorizontal: 16,
+              // marginBottom: 10,
+            }}></View>
+
+          <View
+            style={{
+              flex: 1,
+              margin: 20,
+              borderRadius: 16,
+              backgroundColor: '#fff',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.22,
+              shadowRadius: 2.22,
+
+              elevation: 3,
+            }}>
+            <View style={{flex: 1}}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  alignItems: 'center',
+                  paddingVertical: 16,
+                }}>
+                WhiteHat Jr Class Experience
+              </Text>
+            </View>
+            <View style={{flex: 1, borderRadius: 16, marginHorizontal: 5}}>
+              <YoutubePlayer
+                height={150}
+                // play={true}
+                videoId={'KsOiPy0IeY0'}
+              />
+            </View>
+
+            {/* KsOiPy0IeY0 */}
+            <View style={{}}>
+              <Text
+                style={{
+                  // fontSize: 18,
+                  // fontWeight: 'bold',
+                  textAlign: 'center',
+                  alignItems: 'center',
+                  paddingVertical: 16,
+                }}>
+                Watch how future billionaires are made!
+              </Text>
+            </View>
+          </View>
+          {/* -------------------------------- */}
+          <View
+            style={{
+              borderBottomWidth: 1,
+              borderColor: '#aaa',
+              marginHorizontal: 16,
+            }}></View>
+
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: '#FFF5EC',
+              borderRadius: 10,
+              margin: 16,
+              padding: 18,
+            }}>
+            <View
+              style={{width: 100, height: 100, backgroundColor: '#fff'}}></View>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 18,
+                textAlign: 'center',
+                lineHeight: 25,
+                marginVertical: 10,
+              }}>
+              Only one in 16 million kids have their own website!
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: 'center',
+                lineHeight: 22,
+              }}>
+              Arya will be one of them. Create a website that {'\n'}
+              captures everything from his progress to {'\n'}
+              personality in 45 second free!
+            </Text>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: '#FF8D1A',
+                borderRadius: 5,
+                // marginHorizontal: 16,
+                marginTop: 10,
+              }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  alignItems: 'center',
+                  marginVertical: 10,
+                  color: '#FF8D1A',
+                }}>
+                Create Arya's website
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
+const App = () => {
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={createScreenOptions}
+            tabBarOptions={{
+              activeTintColor: 'tomato',
+              inactiveTintColor: 'gray',
+            }}>
+            <Tab.Screen name="HomeScreen" component={HomeScreen} />
+            <Tab.Screen name="Map" component={Map} />
+            <Tab.Screen name="Settings" component={SettingsScreen} />
+            {/* <Tab.Screen name="Github" component={Github} /> */}
+          </Tab.Navigator>
+        </NavigationContainer>
+        {/* <RestaurantScreen /> */}
+      </ThemeProvider>
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  class_start_timer: {
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 5,
+  },
+
+  class_start_timer_text: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  class_start_timer_text_col: {
+    fontSize: 20,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+});
+
+export default App;
+
+//////////////////////??????????????????//////////////////??????????????//////////////////
+
+
+import React from 'react';
+import {ThemeProvider} from 'styled-components/native';
+import {theme} from './src/infrastructure/theme';
+import {RestaurantsContextProvider} from './src/services/restaurants/restaurant-context';
+import {LocationContextProvider} from './src/services/location/location.context';
+import {Navigation} from './src/infrastructure/navigation';
+
+export default function App() {
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <LocationContextProvider>
+          <RestaurantsContextProvider>
+            <Navigation />
+          </RestaurantsContextProvider>
+        </LocationContextProvider>
+      </ThemeProvider>
+    </>
+  );
+
+}
+
+
+
+???????????????/////////////////////////////?...........>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>
+
+
+
+
+
+import React, {useState, useEffect} from 'react';
+import {View, Text, FlatList, Image} from 'react-native';
+import {RestaurantScreen} from './src/features/restaurants/screens/restaurant.screen';
+import {ThemeProvider} from 'styled-components/native';
+import {theme} from './src/infrastructure/theme';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+// import {createStackNavigator} from '@react-navigation/stack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+// import restaurantsRequest from './src/services/restaurants/restaurant-service';
+// import {HomeScreen} from './src/otherScreen/home-page';
+import {RestaurantsContextProvider} from './src/services/restaurants/restaurant-context';
+import {LocationContextProvider} from './src/services/location/location.context';
+
+const TAB_ICON = {
+  Restaurants: 'restaurant',
+  Map: 'map',
+  Settings: 'settings',
+};
+
+const createScreenOptions = ({route}) => {
+  const iconName = TAB_ICON[route.name];
+  return {
+    tabBarIcon: ({size, color}) => (
+      <Ionicons name={iconName} size={size} color={color} />
+    ),
+  };
+};
+
+function Map() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Map!</Text>
+    </View>
+  );
+}
+
+function SettingsScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+// function Github() {
+//   return (
+//     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+//       <FlatList
+//         data={getData}
+//         renderItem={() => }
+//         keyExtractor={item => item.id}
+//       />
+//     </View>
+//   );
+// }
+
+const Tab = createBottomTabNavigator();
+
+const App = () => {
+  const [getData, setGetData] = useState([]);
+  const [getProfileData, setGetProfileData] = useState();
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    const url = 'https://api.github.com/users/rohitstar/repos';
+
+    const gitFetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        // console.log(data[0].id);
+        setGetData(data);
+      } catch (error) {
+        setLoading(false);
+        setError('Dont fetch data');
+      }
+    };
+
+    gitFetchData();
+  }, []);
+
+  useEffect(() => {
+    const url = 'https://api.github.com/users/rohitstar';
+
+    const gitProfileFetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const profileData = await response.json();
+        // console.log(profileData.avatar_url);
+        setGetProfileData(profileData);
+      } catch (error) {
+        // setLoading(false);
+        console.log('Dont fetch data');
+      }
+    };
+
+    gitProfileFetchData();
+  }, []);
+
+  const renderItem = ({item}) => (
+    <View
+      style={{
+        borderBottomWidth: 2,
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+      }}>
+      <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.name}</Text>
+      <Text style={{fontSize: 10}}>{item.language}</Text>
+    </View>
+  );
+
+  function Github() {
+    return (
+      <View>
+        <View
+          style={{
+            alignItems: 'center',
+            marginVertical: 10,
+            // shadowColor: 'black',
+            // shadowOffset: {
+            //   width: 1,
+            //   height: 15,
+            // },
+            // shadowRadius: 14,
+          }}>
+          <Image
+            source={{
+              uri: getProfileData.avatar_url,
+            }}
+            style={{height: 100, width: 100, borderRadius: 50}}
+          />
+          <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+            {getProfileData.name}
+          </Text>
+          <Text style={{fontSize: 18}}>{getProfileData.location}</Text>
+        </View>
+        {loading ? (
+          <FlatList
+            data={getData}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />
+        ) : (
+          <Text style={{fontSize: 16, fontWeight: 'bold'}}>{error}</Text>
+        )}
+      </View>
+    );
+  }
+
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <LocationContextProvider>
+          <RestaurantsContextProvider>
+            <NavigationContainer>
+              <Tab.Navigator
+                screenOptions={createScreenOptions}
+                tabBarOptions={{
+                  activeTintColor: 'tomato',
+                  inactiveTintColor: 'gray',
+                }}>
+                <Tab.Screen name="Restaurants" component={RestaurantScreen} />
+                <Tab.Screen name="Map" component={Map} />
+                <Tab.Screen name="Settings" component={SettingsScreen} />
+                <Tab.Screen name="Github" component={Github} />
+              </Tab.Navigator>
+            </NavigationContainer>
+          </RestaurantsContextProvider>
+        </LocationContextProvider>
+       
+      </ThemeProvider>
+    </>
+  );
+};
+
+export default App;
+
